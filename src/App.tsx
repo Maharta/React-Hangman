@@ -3,6 +3,7 @@ import HangmanKeyboard from "./components/HangmanKeyboard";
 import HangmanStick from "./components/HangmanStick";
 import HangmanWords from "./components/HangmanWords";
 import useEventListener from "./hooks/useEventListener";
+import useWidth from "./hooks/useWidth";
 import wordList from "./wordList.json";
 
 function getRandomWord() {
@@ -26,6 +27,10 @@ function App() {
     .split("")
     .every((letter) => guessedLetters.includes(letter));
 
+  const { width } = useWidth();
+
+  const isMobile = width <= 768;
+
   const addGuessedLetters = (key: string) => {
     if (guessedLetters.includes(key)) return;
     if (!key.match(/^[a-z]$/)) return;
@@ -45,8 +50,12 @@ function App() {
   return (
     <main className="flex flex-col items-center gap-8 max-w-[800px] mx-auto">
       <h1 className="font-bold text-2xl mt-4 text-center">
-        {isWinner ? "You Win! - Press ENTER to play again" : ""}
-        {isLoser ? "You Lose! - Press ENTER to play again" : ""}
+        {isWinner
+          ? `You Win! -  ${isMobile ? "Reload" : "Press Enter"} to play again`
+          : ""}
+        {isLoser
+          ? `You Lose! - ${isMobile ? "Reload" : "Press Enter"} to play again`
+          : ""}
       </h1>
       <HangmanStick incorrectGuess={incorrectLetters.length} />
       <HangmanWords
